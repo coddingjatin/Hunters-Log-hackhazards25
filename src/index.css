@@ -1,0 +1,76 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 10%;
+    --foreground: 200 100% 95%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 200 100% 95%;
+
+    --popover: 222 47% 8%;
+    --popover-foreground: 200 100% 95%;
+
+    --primary: 196 98% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 5% 14%;
+    --secondary-foreground: 200 100% 95%;
+
+    --muted: 240 5% 15%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 251 87% 63%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 5% 20%;
+    --input: 240 5% 20%;
+    --ring: 192 100% 50%;
+
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-solo-bg text-foreground;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+}
+
+@layer components {
+  .solo-glow-text {
+    @apply text-solo-blue drop-shadow-[0_0_8px_rgba(51,195,240,0.7)];
+  }
+  
+  .solo-glow-border {
+    @apply border border-solo-blue shadow-[0_0_10px_rgba(51,195,240,0.5)];
+  }
+  
+  .solo-card {
+    @apply bg-black/60 backdrop-blur-sm rounded-md solo-glow-border p-6;
+  }
+  
+  .solo-button {
+    @apply bg-solo-cyan hover:bg-solo-blue text-white font-semibold py-2 px-4 rounded
+    transition-all duration-300 solo-glow-text shadow-[0_0_10px_rgba(51,195,240,0.7)]
+    hover:shadow-[0_0_15px_rgba(51,195,240,1)];
+  }
+  
+  .solo-input {
+    @apply bg-black/60 border border-solo-blue/40 text-white rounded-md py-2 px-4 
+    focus:outline-none focus:border-solo-blue focus:solo-glow-border transition-all duration-300;
+  }
+
+  .solo-container {
+    @apply container mx-auto p-4 min-h-screen flex items-center justify-center;
+  }
+}
