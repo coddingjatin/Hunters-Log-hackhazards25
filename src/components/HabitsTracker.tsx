@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuest } from "../contexts/QuestContext";
 import { Button } from "@/components/ui/button";
@@ -40,19 +39,19 @@ const HabitsTracker = () => {
   // Check for streak resets each day
   useEffect(() => {
     resetStreakIfNeeded();
-    
+
     // Set up a daily check at midnight
     const now = new Date();
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-    
+
     const timeUntilMidnight = tomorrow.getTime() - now.getTime();
-    
+
     const midnightCheck = setTimeout(() => {
       resetStreakIfNeeded();
     }, timeUntilMidnight);
-    
+
     return () => clearTimeout(midnightCheck);
   }, [resetStreakIfNeeded]);
 
@@ -86,10 +85,11 @@ const HabitsTracker = () => {
               <Plus className="h-4 w-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] bg-solo-dark border-solo-blue/50">
-            <DialogHeader>
-              <DialogTitle className="solo-glow-text">Add New Habit</DialogTitle>
-            </DialogHeader>
+          <DialogContent className="sm:max-w-[425px] max-w-[90vw] bg-solo-dark border-solo-blue/50 p-6">
+          <DialogHeader>
+  <DialogTitle className="solo-glow-text text-center w-full" style={{ textAlign: 'center' }}>
+  </DialogTitle>
+</DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               <div className="space-y-2">
                 <label className="text-sm">Habit Name</label>
@@ -231,7 +231,7 @@ const HabitsTracker = () => {
           </tbody>
         </table>
       </div>
-      
+
       <div className="mt-6 text-center">
         <Button
           variant="ghost" 

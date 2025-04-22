@@ -48,7 +48,7 @@ const Login = () => {
 
       <div className="w-full max-w-md p-8 solo-card animate-fade-in z-10 relative backdrop-blur-lg">
         <h1 className="text-3xl font-bold text-center mb-8 solo-glow-text tracking-wider">
-          SOLO LEVELING
+          HUNTER'S LOG
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">

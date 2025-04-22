@@ -1,4 +1,3 @@
-
 import React from "react"; // Ensure React is imported first
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { QuestProvider } from "./contexts/QuestContext";
+import SystemLanding from "./components/SystemLanding"; // Import SystemLanding
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -30,9 +30,12 @@ const App: React.FC = () => {
           <AuthProvider>
             <QuestProvider>
               <Routes>
-                <Route path="/" element={<Navigate to="/login" />} />
+                {/* Public Routes */}
+                <Route path="/" element={<SystemLanding />} /> {/* Add SystemLanding as homepage */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+
+                {/* Protected Routes */}
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />
@@ -53,7 +56,8 @@ const App: React.FC = () => {
                     <Settings />
                   </ProtectedRoute>
                 } />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+                {/* Fallback route for undefined paths */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </QuestProvider>

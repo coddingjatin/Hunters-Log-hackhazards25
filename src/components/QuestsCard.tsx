@@ -1,4 +1,3 @@
-
 import { Plus, Check, X } from "lucide-react";
 import { useQuest } from "../contexts/QuestContext";
 import { Button } from "@/components/ui/button";
@@ -30,15 +29,20 @@ const QuestsCard = () => {
     <div className="solo-card w-full">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold solo-glow-text">Daily Quests</h2>
+        {/* Dialog Trigger Button */}
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" size="sm" className="solo-button !p-2">
               <Plus className="h-4 w-4" />
             </Button>
           </DialogTrigger>
+          
+          {/* Dialog Content */}
           <DialogContent className="sm:max-w-[425px] bg-solo-dark border-solo-blue/50">
             <DialogHeader>
-              <DialogTitle className="solo-glow-text">Add New Quest</DialogTitle>
+              <DialogTitle className="solo-glow-text text-center w-full" style={{ textAlign: 'center' }}>
+                Add New Quest
+              </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 pt-4">
               <div className="space-y-2">
