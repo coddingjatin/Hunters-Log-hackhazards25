@@ -54,7 +54,6 @@ const ShadowSoldiers = () => {
       return;
     }
     
-    // Generate random stats for the friend
     const characterClasses = ["Rookie Hunter", "Mage Hunter", "Assassin Hunter", "Shadow Monarch"];
     const randomClass = characterClasses[Math.floor(Math.random() * characterClasses.length)];
     
@@ -245,7 +244,7 @@ const ShadowSoldiers = () => {
                   <div className="flex gap-2">
                     <Button className="flex-1 bg-solo-blue/20 hover:bg-solo-blue/30 text-solo-blue">
                       <MessageCircle className="h-4 w-4 mr-2" />
-                      Message
+                      Arise
                     </Button>
                     <Button
                       className="bg-red-500/20 hover:bg-red-500/30 text-red-500"

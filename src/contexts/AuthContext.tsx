@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -8,6 +7,7 @@ type User = {
   username: string;
   email: string;
   gold?: number;
+  profileImage?: string; // Added profile image
   stats: {
     level: number;
     rank: string;
@@ -27,6 +27,7 @@ type AuthContextType = {
   logout: () => void;
   updateUserStats: (xpAmount: number, additionalStats?: Record<string, any>) => void;
   updateUserProfile: (username: string, email: string) => void;
+  updateProfileImage: (image: File) => void; // Added method for updating profile image
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -91,7 +92,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      // For demo purposes - this would be an API call in production
       const storedUsers = localStorage.getItem("soloLevelingUsers");
       const users = storedUsers ? JSON.parse(storedUsers) : [];
       
@@ -118,7 +118,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (username: string, email: string, password: string, characterClass: string) => {
     try {
-      // For demo purposes - this would be an API call in production
       const storedUsers = localStorage.getItem("soloLevelingUsers");
       const users = storedUsers ? JSON.parse(storedUsers) : [];
       
@@ -143,7 +142,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       users.push(newUser);
       localStorage.setItem("soloLevelingUsers", JSON.stringify(users));
       
-      // Remove password before storing in state
       const { password: _, ...userWithoutPassword } = newUser;
       setUser(userWithoutPassword);
       setIsAuthenticated(true);
@@ -175,8 +173,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const currentUserIndex = users.findIndex((u: any) => u.id === user.id);
     
     if (currentUserIndex >= 0) {
-      const currentUser = users[currentUserIndex];
-      let { currentXP, maxXP, level, rank } = currentUser.stats;
+      let { currentXP, maxXP, level, rank } = users[currentUserIndex].stats;
       
       // Add XP if provided
       if (xpAmount > 0) {
@@ -188,30 +185,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           currentXP = currentXP - maxXP;
           maxXP = Math.floor(maxXP * 1.2); // Increase XP needed for next level
           
-          // Update rank based on level
           if (level >= 20) rank = "S-RANK";
           else if (level >= 15) rank = "A-RANK";
           else if (level >= 10) rank = "B-RANK";
           else if (level >= 5) rank = "C-RANK";
           else if (level >= 3) rank = "D-RANK";
           
-          toast.success(`LEVEL UP! You are now level ${level}!`, {
-            duration: 5000,
-            style: { backgroundColor: "#0FA0CE", color: "white" }
-          });
-          
-          if (rank !== currentUser.stats.rank) {
-            toast.success(`RANK UP! You are now ${rank}!`, {
-              duration: 5000,
-              style: { backgroundColor: "#8B5CF6", color: "white" }
-            });
+          toast.success(`LEVEL UP! You are now level ${level}!`);
+          if (rank !== users[currentUserIndex].stats.rank) {
+            toast.success(`RANK UP! You are now ${rank}!`);
           }
         }
       }
       
       // Update user stats
       users[currentUserIndex].stats = {
-        ...currentUser.stats,
+        ...users[currentUserIndex].stats,
         currentXP,
         maxXP,
         level,
@@ -221,11 +210,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ...(additionalStats && additionalStats.dexterity && { dexterity: additionalStats.dexterity })
       };
       
-      // Update other user properties if provided
-      if (additionalStats) {
-        if (additionalStats.gold !== undefined) {
-          users[currentUserIndex].gold = additionalStats.gold;
-        }
+      // Update gold if changed
+      if (additionalStats?.gold !== undefined) {
+        users[currentUserIndex].gold = additionalStats.gold;
       }
       
       // Save to localStorage
@@ -248,7 +235,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const currentUserIndex = users.findIndex((u: any) => u.id === user.id);
     
     if (currentUserIndex >= 0) {
-      // Update user info
       users[currentUserIndex].username = username;
       users[currentUserIndex].email = email;
       
@@ -262,15 +248,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateProfileImage = (image: File) => {
+    if (!isAuthenticated || !user) return;
+
+    const reader = new FileReader();
+    
+    reader.onloadend = () => {
+      const profileImage = reader.result as string;
+      
+      const storedUsers = localStorage.getItem("soloLevelingUsers");
+      if (!storedUsers) return;
+
+      const users = JSON.parse(storedUsers);
+      const currentUserIndex = users.findIndex((u: any) => u.id === user.id);
+
+      if (currentUserIndex >= 0) {
+        users[currentUserIndex].profileImage = profileImage;
+
+        localStorage.setItem("soloLevelingUsers", JSON.stringify(users));
+        
+        const { password, ...userWithoutPassword } = users[currentUserIndex];
+        setUser(userWithoutPassword);
+        localStorage.setItem("soloLevelingUser", JSON.stringify(userWithoutPassword));
+        
+        toast.success("Profile image updated successfully!");
+      }
+    };
+    
+    reader.readAsDataURL(image);
+  };
+
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      isAuthenticated, 
-      login, 
-      register, 
-      logout, 
+    <AuthContext.Provider value={{
+      user,
+      isAuthenticated,
+      login,
+      register,
+      logout,
       updateUserStats,
-      updateUserProfile
+      updateUserProfile,
+      updateProfileImage,  // Include here
     }}>
       {children}
     </AuthContext.Provider>

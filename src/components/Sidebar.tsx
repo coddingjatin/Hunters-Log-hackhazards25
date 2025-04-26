@@ -33,7 +33,7 @@ const Sidebar = ({ className }: SidebarProps) => {
       <div className="p-4 flex items-center justify-between border-b border-solo-blue/20">
         {!collapsed && (
           <h2 className="text-xl font-bold solo-glow-text">
-            SOLO LEVELING
+            HUNTER'S LOG
           </h2>
         )}
         

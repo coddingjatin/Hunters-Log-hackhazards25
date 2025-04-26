@@ -29,7 +29,7 @@ const HabitsTracker = () => {
   const [newHabit, setNewHabit] = useState({
     name: "",
     icon: "dumbbell",
-    xpReward: 50,
+    xpReward: 25,
   });
 
   const days = ["S", "M", "T", "W", "T", "F", "S"];
@@ -127,7 +127,7 @@ const HabitsTracker = () => {
                 <Input
                   type="number"
                   min="1"
-                  max="200"
+                  max="25"
                   value={newHabit.xpReward}
                   onChange={(e) => setNewHabit({ ...newHabit, xpReward: parseInt(e.target.value) })}
                   required

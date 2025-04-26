@@ -149,7 +149,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         name: "Exercise",
         icon: "dumbbell",
         completedDays: [],
-        xpReward: 50,
+        xpReward: 25,
         streak: 0,
       },
       {
@@ -177,14 +177,14 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         id: "1",
         name: "Complete 3-Day Workout Challenge",
         description: "Complete 3 consecutive days of exercise to level up your strength.",
-        xpReward: 150,
+        xpReward: 15,
         completed: false,
       },
       {
         id: "2",
         name: "Study Session",
         description: "Complete a 30-minute focused study session to increase intelligence.",
-        xpReward: 100,
+        xpReward: 25,
         completed: false,
       },
     ];
@@ -241,100 +241,70 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const completeHabit = (habitId: string, day: string) => {
     const today = new Date().toISOString().split('T')[0];
     const isToday = day === today;
-    
+  
     setHabits((prev) =>
       prev.map((habit) => {
         if (habit.id === habitId) {
           const alreadyCompleted = habit.completedDays.includes(day);
-          let updatedDays;
-          let updatedStreak = habit.streak;
           
           if (alreadyCompleted) {
-            // Uncompleting a habit for today
-            updatedDays = habit.completedDays.filter((d) => d !== day);
-            toast.info(`Marked "${habit.name}" as incomplete for today`);
-            
-            // If we're unmarking today's completion, adjust streak if needed
-            if (isToday) {
-              // Check if yesterday was completed to determine streak
-              const yesterday = new Date();
-              yesterday.setDate(yesterday.getDate() - 1);
-              const yesterdayString = yesterday.toISOString().split('T')[0];
-              const isYesterdayCompleted = habit.completedDays.includes(yesterdayString);
-              
-              if (!isYesterdayCompleted && updatedStreak > 0) {
-                updatedStreak -= 1;
-              }
-            }
-            
-            return {
-              ...habit,
-              completedDays: updatedDays,
-              streak: updatedStreak,
-              lastCompletedDate: updatedDays.length > 0 ? 
-                updatedDays.sort().reverse()[0] : undefined
-            };
-          } else {
-            // Completing a habit for today
-            updatedDays = [...habit.completedDays, day].sort();
-            
-            // If completing for today, check if yesterday was completed to increase streak
-            if (isToday) {
-              const yesterday = new Date();
-              yesterday.setDate(yesterday.getDate() - 1);
-              const yesterdayString = yesterday.toISOString().split('T')[0];
-              const isYesterdayCompleted = habit.completedDays.includes(yesterdayString);
-              
-              // Increase streak if yesterday was completed or streak is 0
-              if (isYesterdayCompleted || habit.streak === 0) {
-                updatedStreak = habit.streak + 1;
-                
-                // Check for streak achievements
-                if (updatedStreak === 3 || updatedStreak === 7 || 
-                    updatedStreak === 14 || updatedStreak === 30 || 
-                    updatedStreak === 60 || updatedStreak === 100) {
-                  
-                  const streakBadge: Badge = {
-                    id: `streak-${habit.id}-${updatedStreak}-${Date.now()}`,
-                    name: `${updatedStreak} Day Streak`,
-                    description: `Completed "${habit.name}" for ${updatedStreak} days in a row!`,
-                    icon: getStreakBadgeIcon(updatedStreak),
-                    color: getStreakBadgeColor(updatedStreak),
-                    type: 'streak',
-                    dateEarned: new Date().toISOString(),
-                  };
-                  
-                  // Add the streak badge
-                  setBadges(prev => [...prev, streakBadge]);
-                  
-                  // Give bonus XP for streak achievements
-                  const bonusXP = Math.floor(habit.xpReward * (updatedStreak / 3));
-                  updateUserStats(bonusXP);
-                  
-                  toast.success(
-                    `🔥 ${updatedStreak} DAY STREAK! "${habit.name}" +${bonusXP} bonus XP!`, 
-                    { duration: 5000 }
-                  );
-                }
-              }
-            }
-            
-            toast.success(`Completed "${habit.name}" today! +${habit.xpReward} XP`);
-            
-            // Update user XP when completing a habit
-            updateUserStats(habit.xpReward);
-            
-            // Also add some gold
-            const goldAmount = Math.floor(habit.xpReward / 2);
-            updateUserStats(0, { gold: (user?.gold || 0) + goldAmount });
-            toast.success(`Earned ${goldAmount} gold!`, { duration: 3000 });
+            // Don't allow to uncomplete if already completed
+            toast.info(`"${habit.name}" has already been completed for today`);
+            return habit;  // Return habit as it is
           }
-          
+  
+          let updatedDays = [...habit.completedDays, day].sort();
+          let updatedStreak = habit.streak;
+  
+          if (isToday) {
+            // Handle streak logic for today
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayString = yesterday.toISOString().split('T')[0];
+            const isYesterdayCompleted = habit.completedDays.includes(yesterdayString);
+  
+            // Increase streak if yesterday was completed or streak is 0
+            if (isYesterdayCompleted || habit.streak === 0) {
+              updatedStreak = habit.streak + 1;
+  
+              // Handle streak achievements
+              if (updatedStreak === 3 || updatedStreak === 7 || updatedStreak === 14 || updatedStreak === 30 || updatedStreak === 60 || updatedStreak === 100) {
+                const streakBadge: Badge = {
+                  id: `streak-${habit.id}-${updatedStreak}-${Date.now()}`,
+                  name: `${updatedStreak} Day Streak`,
+                  description: `Completed "${habit.name}" for ${updatedStreak} days in a row!`,
+                  icon: getStreakBadgeIcon(updatedStreak),
+                  color: getStreakBadgeColor(updatedStreak),
+                  type: 'streak',
+                  dateEarned: new Date().toISOString(),
+                };
+  
+                setBadges((prev) => [...prev, streakBadge]);
+  
+                // Give bonus XP for streak achievements
+                const bonusXP = Math.floor(habit.xpReward * (updatedStreak / 3));
+                updateUserStats(bonusXP);
+  
+                toast.success(`🔥 ${updatedStreak} DAY STREAK! "${habit.name}" +${bonusXP} bonus XP!`, { duration: 5000 });
+              }
+            }
+          }
+  
+          // Update user XP
+          updateUserStats(habit.xpReward);
+  
+          // Gold reward
+          const goldAmount = Math.floor(habit.xpReward / 2);
+          updateUserStats(0, { gold: (user?.gold || 0) + goldAmount });
+          toast.success(`Earned ${goldAmount} gold!`, { duration: 3000 });
+  
+          toast.success(`Completed "${habit.name}" today! +${habit.xpReward} XP`);
+  
           return {
             ...habit,
             completedDays: updatedDays,
             streak: updatedStreak,
-            lastCompletedDate: isToday && !alreadyCompleted ? today : habit.lastCompletedDate
+            lastCompletedDate: isToday && !alreadyCompleted ? today : habit.lastCompletedDate,
           };
         }
         return habit;

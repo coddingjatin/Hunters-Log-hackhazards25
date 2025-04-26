@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useQuest } from "../contexts/QuestContext";
 import Badge from "./Badge";
@@ -18,6 +17,22 @@ const BadgesCard = () => {
     });
   };
 
+  // Filter duplicates based on level and name
+  const filterDuplicateBadges = (badges: any[]) => {
+    const uniqueBadges = [];
+    const seen = new Set();
+
+    badges.forEach(badge => {
+      const uniqueKey = `${badge.name}-${badge.level}`;
+      if (!seen.has(uniqueKey)) {
+        seen.add(uniqueKey);
+        uniqueBadges.push(badge);
+      }
+    });
+
+    return uniqueBadges;
+  };
+
   return (
     <div className="solo-card w-full">
       <h2 className="text-xl font-bold solo-glow-text mb-4">My Badges</h2>
@@ -32,7 +47,7 @@ const BadgesCard = () => {
             <div>
               <h3 className="text-sm text-slate-400 mb-2">Level Badges</h3>
               <div className="flex flex-wrap gap-2">
-                {sortBadges(levelBadges).map(badge => (
+                {sortBadges(filterDuplicateBadges(levelBadges)).map(badge => (
                   <Badge
                     key={badge.id}
                     type={badge.type}
@@ -51,7 +66,7 @@ const BadgesCard = () => {
             <div>
               <h3 className="text-sm text-slate-400 mb-2">Streak Badges</h3>
               <div className="flex flex-wrap gap-2">
-                {sortBadges(streakBadges).map(badge => (
+                {sortBadges(filterDuplicateBadges(streakBadges)).map(badge => (
                   <Badge
                     key={badge.id}
                     type={badge.type}
@@ -69,7 +84,7 @@ const BadgesCard = () => {
             <div>
               <h3 className="text-sm text-slate-400 mb-2">Achievement Badges</h3>
               <div className="flex flex-wrap gap-2">
-                {sortBadges(achievementBadges).map(badge => (
+                {sortBadges(filterDuplicateBadges(achievementBadges)).map(badge => (
                   <Badge
                     key={badge.id}
                     type={badge.type}

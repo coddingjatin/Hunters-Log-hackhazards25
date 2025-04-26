@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Badge as UiBadge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -49,7 +48,8 @@ const Badge = ({ type, name, description, icon = 'award', color = 'blue', level 
             {getIcon()}
             <span>
               {name}
-              {level && ` ${level}`}
+              {/* Only append level for "level" type badges, and ensure it’s not in the name already */}
+              {type === 'level' && level && !name.includes(`Level ${level}`) && ` - Level ${level}`}
             </span>
           </UiBadge>
         </TooltipTrigger>
