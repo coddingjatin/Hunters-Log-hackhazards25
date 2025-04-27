@@ -125,7 +125,7 @@ By blending gamification, goal-setting, and personal growth tracking, we ensure 
 
 ## 📽️ Demo & Deliverables
 
-- **Demo Video Link:** [Paste YouTube or Loom link here]  
+- **Demo Video Link:** ( https://www.youtube.com/watch?v=SlUycEiRb-g )  
 - **PPT Link:** ( https://drive.google.com/file/d/1SACw7HZ3lOBTvsjPXjzRHix22ompruI9/view?usp=sharing )
 
 - (We have attached project screenshots and a detailed PPT explaining flow, UI, and future roadmap.)
