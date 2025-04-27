@@ -98,18 +98,22 @@ By blending gamification, goal-setting, and personal growth tracking, we ensure 
 ## Screenshots 
 <p align="center">
   <img src="Files/home.png" width="800"/> 
+  <br>
   <img src="Files/footer.png" width="800"/>
 </p>
 <p align="center">
   <img src="Files/regis.png" width="800"/> 
+   <br>
   <img src="Files/login.png" width="800"/>
 </p>
 <p align="center">
   <img src="Files/dash.png" width="800"/> 
+   <br>
   <img src="Files/dash2.png" width="800"/>
 </p>
 <p align="center">
   <img src="Files/store.png" width="800"/> 
+   <br>
   <img src="Files/addfriend.png" width="800"/>
 </p>
 <p align="center">
