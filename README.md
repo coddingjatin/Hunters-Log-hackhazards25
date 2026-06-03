@@ -1,16 +1,3 @@
-![github-submission-banner](https://github.com/user-attachments/assets/a1493b84-e4e2-456e-a791-ce35ee2bcf2f)
-
-# 🚀 Hunter's Log: A Gamified and Personalized Habit Builder
-
-> Level Up Your Life In Hunter's Style.
-
----
-
-## 📌 Problem Statement
-
-**Problem Statement 9 – Build the Ultimate Digital Habit Builder**
-
----
 
 ## 🎯 Objective
 
