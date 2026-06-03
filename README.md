@@ -10,18 +10,8 @@ By blending gamification, goal-setting, and personal growth tracking, we ensure 
 
 ---
 
-## 🧠 Team & Approach
 
-### Team Name:  
-`CS-Nerds.dev`
-
-### Team Members:  
-- **[Jatin Vishwakarma](https://github.com/coddingjatin)**
-- **[Samarth Mane](https://github.com/SamarthMane09)** 
-- **[Sujal Lokhande](https://github.com/sujal-cs)** 
-- **[Pranay Durutkar](https://github.com/Pranay2818)**
-
-### Your Approach:  
+### Our Approach:  
 - **Problem Statement Selection:**
 --> We chose this because we felt the traditional apps lacked excitement. Habits should feel like achievements, not chores.
 
