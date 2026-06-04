@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuest } from "../contexts/QuestContext";
 import { Button } from "@/components/ui/button";
-import { Flame, Plus, CheckCircle, Circle, Dumbbell, BookOpen, ScrollText, Code, Brain } from "lucide-react";
+import { Flame, Plus, CheckCircle, Circle, Dumbbell, BookOpen, ScrollText, Code, Brain, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,7 +24,7 @@ const iconOptions = [
 ];
 
 const HabitsTracker = () => {
-  const { habits, completeHabit, addHabit, resetStreakIfNeeded } = useQuest();
+  const { habits, completeHabit, addHabit, deleteHabit, resetStreakIfNeeded } = useQuest();
   const [isOpen, setIsOpen] = useState(false);
   const [newHabit, setNewHabit] = useState({
     name: "",
@@ -158,6 +158,7 @@ const HabitsTracker = () => {
                 </th>
               ))}
               <th className="text-center font-normal text-slate-400 pb-4 px-2">Streak</th>
+              <th className="text-center font-normal text-slate-400 pb-4 px-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -224,6 +225,15 @@ const HabitsTracker = () => {
                         </span>
                       </div>
                     </div>
+                  </td>
+                  <td className="text-center">
+                    <button
+                      onClick={() => deleteHabit(habit.id)}
+                      title="Delete habit"
+                      className="p-1.5 rounded-md text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </td>
                 </tr>
               ))
