@@ -38,8 +38,10 @@ interface QuestContextType {
   badges: Badge[];
   addHabit: (name: string, icon: string, xpReward: number) => void;
   completeHabit: (habitId: string, day: string) => void;
+  deleteHabit: (habitId: string) => void;
   addQuest: (name: string, description: string, xpReward: number) => void;
   completeQuest: (questId: string) => void;
+  deleteQuest: (questId: string) => void;
   resetStreakIfNeeded: () => void;
 }
 
@@ -67,7 +69,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (storedUsers) {
         const users = JSON.parse(storedUsers);
         const currentUser = users.find((u: any) => u.id === user.id);
-        
+
         if (currentUser) {
           setHabits(currentUser.habits || getDefaultHabits());
           setQuests(currentUser.quests || getDefaultQuests());
@@ -101,7 +103,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           }
           return u;
         });
-        
+
         localStorage.setItem("soloLevelingUsers", JSON.stringify(updatedUsers));
       }
     }
@@ -111,7 +113,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (isAuthenticated && user && user.stats) {
       // Check if user already has a badge for the current level
-      const hasLevelBadge = badges.some(badge => 
+      const hasLevelBadge = badges.some(badge =>
         badge.type === 'level' && badge.level === user.stats.level
       );
 
@@ -199,7 +201,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       xpReward,
       streak: 0,
     };
-    
+
     setHabits((prev) => [...prev, newHabit]);
     toast.success(`New habit "${name}" created!`);
   };
@@ -220,7 +222,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       const lastCompletedDate = new Date(habit.lastCompletedDate);
       lastCompletedDate.setHours(0, 0, 0, 0);
-      
+
       // If last completion wasn't yesterday, reset streak (unless completed today)
       const todayString = today.toISOString().split('T')[0];
       const isCompletedToday = habit.completedDays.includes(todayString);
@@ -228,12 +230,12 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (!isCompletedToday && lastCompletedDate.toISOString() !== yesterdayString) {
         // Only notify if the streak was significant (3 or more)
         if (habit.streak >= 3) {
-          toast.error(`Oh no! You broke your ${habit.streak} day streak for "${habit.name}"`, 
+          toast.error(`Oh no! You broke your ${habit.streak} day streak for "${habit.name}"`,
             { duration: 5000 });
         }
         return { ...habit, streak: 0 };
       }
-      
+
       return habit;
     }));
   };
@@ -241,32 +243,32 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const completeHabit = (habitId: string, day: string) => {
     const today = new Date().toISOString().split('T')[0];
     const isToday = day === today;
-  
+
     setHabits((prev) =>
       prev.map((habit) => {
         if (habit.id === habitId) {
           const alreadyCompleted = habit.completedDays.includes(day);
-          
+
           if (alreadyCompleted) {
             // Don't allow to uncomplete if already completed
             toast.info(`"${habit.name}" has already been completed for today`);
             return habit;  // Return habit as it is
           }
-  
+
           let updatedDays = [...habit.completedDays, day].sort();
           let updatedStreak = habit.streak;
-  
+
           if (isToday) {
             // Handle streak logic for today
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
             const yesterdayString = yesterday.toISOString().split('T')[0];
             const isYesterdayCompleted = habit.completedDays.includes(yesterdayString);
-  
-            // Increase streak if yesterday was completed or streak is 0
-            if (isYesterdayCompleted || habit.streak === 0) {
+
+            // Only increment if yesterday was completed OR this is the very first time
+            if (isYesterdayCompleted || habit.completedDays.length === 0) {
               updatedStreak = habit.streak + 1;
-  
+
               // Handle streak achievements
               if (updatedStreak === 3 || updatedStreak === 7 || updatedStreak === 14 || updatedStreak === 30 || updatedStreak === 60 || updatedStreak === 100) {
                 const streakBadge: Badge = {
@@ -278,28 +280,28 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                   type: 'streak',
                   dateEarned: new Date().toISOString(),
                 };
-  
+
                 setBadges((prev) => [...prev, streakBadge]);
-  
+
                 // Give bonus XP for streak achievements
                 const bonusXP = Math.floor(habit.xpReward * (updatedStreak / 3));
                 updateUserStats(bonusXP);
-  
+
                 toast.success(`🔥 ${updatedStreak} DAY STREAK! "${habit.name}" +${bonusXP} bonus XP!`, { duration: 5000 });
               }
             }
           }
-  
+
           // Update user XP
           updateUserStats(habit.xpReward);
-  
+
           // Gold reward
           const goldAmount = Math.floor(habit.xpReward / 2);
           updateUserStats(0, { gold: (user?.gold || 0) + goldAmount });
           toast.success(`Earned ${goldAmount} gold!`, { duration: 3000 });
-  
+
           toast.success(`Completed "${habit.name}" today! +${habit.xpReward} XP`);
-  
+
           return {
             ...habit,
             completedDays: updatedDays,
@@ -335,7 +337,7 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       xpReward,
       completed: false,
     };
-    
+
     setQuests((prev) => [...prev, newQuest]);
     toast.success(`New quest "${name}" created!`);
   };
@@ -345,15 +347,15 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       prev.map((quest) => {
         if (quest.id === questId && !quest.completed) {
           toast.success(`Quest "${quest.name}" completed! +${quest.xpReward} XP`);
-          
+
           // Update user XP when completing a quest
           updateUserStats(quest.xpReward);
-          
+
           // Also add some gold
           const goldAmount = quest.xpReward;
           updateUserStats(0, { gold: (user?.gold || 0) + goldAmount });
           toast.success(`Earned ${goldAmount} gold!`, { duration: 3000 });
-          
+
           // Add achievement badge
           const questBadge: Badge = {
             id: `quest-${questId}-${Date.now()}`,
@@ -364,9 +366,9 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             type: 'achievement',
             dateEarned: new Date().toISOString(),
           };
-          
+
           setBadges(prev => [...prev, questBadge]);
-          
+
           return {
             ...quest,
             completed: true,
@@ -377,16 +379,28 @@ export const QuestProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   };
 
+  const deleteHabit = (habitId: string) => {
+    setHabits((prev) => prev.filter((h) => h.id !== habitId));
+    toast.success("Habit removed.");
+  };
+
+  const deleteQuest = (questId: string) => {
+    setQuests((prev) => prev.filter((q) => q.id !== questId));
+    toast.success("Quest removed.");
+  };
+
   return (
     <QuestContext.Provider
-      value={{ 
-        habits, 
-        quests, 
+      value={{
+        habits,
+        quests,
         badges,
-        addHabit, 
-        completeHabit, 
-        addQuest, 
+        addHabit,
+        completeHabit,
+        deleteHabit,
+        addQuest,
         completeQuest,
+        deleteQuest,
         resetStreakIfNeeded
       }}
     >

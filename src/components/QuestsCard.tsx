@@ -1,4 +1,4 @@
-import { Plus, Check, X } from "lucide-react";
+import { Plus, Check, X, Trash2 } from "lucide-react";
 import { useQuest } from "../contexts/QuestContext";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 const QuestsCard = () => {
-  const { quests, completeQuest, addQuest } = useQuest();
+  const { quests, completeQuest, addQuest, deleteQuest } = useQuest();
   const [isOpen, setIsOpen] = useState(false);
   const [newQuest, setNewQuest] = useState({
     name: "",
@@ -128,15 +128,28 @@ const QuestsCard = () => {
                   +{quest.xpReward} XP
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="shrink-0 h-8 w-8 p-0 rounded-full"
-                onClick={() => completeQuest(quest.id)}
-              >
-                <Check className="h-4 w-4 text-green-500" />
-                <span className="sr-only">Complete</span>
-              </Button>
+              <div className="flex items-center gap-1 shrink-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-full"
+                  onClick={() => completeQuest(quest.id)}
+                  title="Complete quest"
+                >
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="sr-only">Complete</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 rounded-full hover:text-red-400 hover:bg-red-500/10"
+                  onClick={() => deleteQuest(quest.id)}
+                  title="Delete quest"
+                >
+                  <Trash2 className="h-4 w-4 text-slate-500 hover:text-red-400" />
+                  <span className="sr-only">Delete</span>
+                </Button>
+              </div>
             </div>
           ))
         )}
@@ -163,6 +176,16 @@ const QuestsCard = () => {
                   <div className="shrink-0 h-8 w-8 flex items-center justify-center">
                     <Check className="h-4 w-4 text-green-500" />
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="shrink-0 h-8 w-8 p-0 rounded-full hover:text-red-400 hover:bg-red-500/10"
+                    onClick={() => deleteQuest(quest.id)}
+                    title="Delete quest"
+                  >
+                    <Trash2 className="h-4 w-4 text-slate-500 hover:text-red-400" />
+                    <span className="sr-only">Delete</span>
+                  </Button>
                 </div>
               ))}
             </div>
