@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuest } from "../contexts/QuestContext";
 import { Button } from "@/components/ui/button";
-import { Flame, Plus, CheckCircle, Circle, Dumbbell, BookOpen, ScrollText, Code, Brain, Trash2 } from "lucide-react";
+import { Flame, Plus, CheckCircle, Circle, Dumbbell, BookOpen, ScrollText, Code, Brain, Trash2, GlassWater, Footprints, Heart, Sparkles } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +13,10 @@ const iconComponents: Record<string, React.ReactNode> = {
   scroll: <ScrollText className="h-5 w-5" />,
   code: <Code className="h-5 w-5" />,
   brain: <Brain className="h-5 w-5" />,
+  "glass-water": <GlassWater className="h-5 w-5" />,
+  footprints: <Footprints className="h-5 w-5" />,
+  heart: <Heart className="h-5 w-5" />,
+  sparkles: <Sparkles className="h-5 w-5" />,
 };
 
 const iconOptions = [
@@ -21,6 +25,10 @@ const iconOptions = [
   { value: "scroll", label: "Study" },
   { value: "code", label: "Code" },
   { value: "brain", label: "Mental" },
+  { value: "glass-water", label: "Hydration" },
+  { value: "footprints", label: "Walk/Run" },
+  { value: "heart", label: "Health" },
+  { value: "sparkles", label: "Mindfulness" },
 ];
 
 const HabitsTracker = () => {

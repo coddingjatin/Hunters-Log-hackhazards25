@@ -40,7 +40,7 @@ const Store = () => {
       price: 500,
       type: "potion",
       effect: "heal-all",
-      imagePath: "public/holyportion.png",
+      imagePath: "/holyportion.png",
       itemClass: "S",
     },
     {
@@ -50,7 +50,7 @@ const Store = () => {
       price: 150,
       type: "potion",
       effect: "strength",
-      imagePath: "stre.jpg",
+      imagePath: "/stre.jpg",
       itemClass: "A",
     },
     {
@@ -60,7 +60,7 @@ const Store = () => {
       price: 150,
       type: "potion",
       effect: "intelligence",
-      imagePath: "public/elix.jpg",
+      imagePath: "/elix.jpg",
       itemClass: "A",
     },
     {
@@ -70,7 +70,7 @@ const Store = () => {
       price: 150,
       type: "potion",
       effect: "dexterity",
-      imagePath: "elixx.jpeg",
+      imagePath: "/elixx.jpeg",
       itemClass: "A",
     },
     {
@@ -80,7 +80,7 @@ const Store = () => {
       price: 250,
       type: "skill",
       effect: "xp",
-      imagePath: "mind.jpeg",
+      imagePath: "/mind.jpeg",
       itemClass: "B",
     },
     {
@@ -90,8 +90,18 @@ const Store = () => {
       price: 300,
       type: "equipment",
       effect: "dexterity",
-      imagePath: "public/shadow.jpg",
+      imagePath: "/shadow.jpg",
       itemClass: "S",
+    },
+    {
+      id: "e3",
+      name: "Kasaka's Venom Fang",
+      description: "A legendary dagger crafted from the venom gland of the Blue-Fanged Kasaka. Grants +8 Strength.",
+      price: 400,
+      type: "equipment",
+      effect: "kasaka-venom",
+      imagePath: "/kasaka.png",
+      itemClass: "A",
     },
   ]);
 
@@ -116,6 +126,9 @@ const Store = () => {
         break;
       case "dexterity":
         statsUpdate.dexterity = user.stats.dexterity + 5;
+        break;
+      case "kasaka-venom":
+        statsUpdate.strength = user.stats.strength + 8;
         break;
       case "xp":
         updateUserStats(500);
